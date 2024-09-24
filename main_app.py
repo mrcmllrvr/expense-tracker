@@ -116,7 +116,7 @@ def main():
 
     # Use file uploader for images and PDFs
     with col3:
-        uploaded_files = st.file_uploader("Upload Receipt", accept_multiple_files=True, type=["pdf", "jpg", "jpeg", "png"])
+        uploaded_files = st.file_uploader("Upload receipt", accept_multiple_files=True, type=["pdf", "jpg", "jpeg", "png"])
 
     # Expense Summary Table to display results
     if 'summary_data' not in st.session_state:
