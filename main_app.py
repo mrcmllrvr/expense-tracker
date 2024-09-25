@@ -50,7 +50,6 @@ def extract_raw_text_from_img_openai(image_bytes):
     return response['choices'][0]['message']['content']
 
 # Extract structured receipt data using GPT-4
-
 def extract_structured_data(content: str):
     template = """
         You are an expert at extracting information from receipts. Please note that the image may contain more than one receipt. 
@@ -73,19 +72,11 @@ def extract_structured_data(content: str):
         {content}
 
         Return the information in this format:
-        Receipt 1:
         Date of Purchase: 
         Merchant:
         Amount:
-        Category:
-        Summary:
-        
-        Receipt 2 (if applicable):
-        Date of Purchase: 
-        Merchant:
-        Amount:
-        Category:
-        Summary:
+        Category: <choose from the provided list based on the receipt content and context>
+        Summary: <Merchant> payment for <item/transaction made> on <date>.
     """
     
     response = openai.ChatCompletion.create(
@@ -94,7 +85,7 @@ def extract_structured_data(content: str):
             "role": "user",
             "content": template.format(content=content)
         }],
-        max_tokens=2048
+        max_tokens=500
     )
     
     return response.choices[0].message['content'].strip()
