@@ -107,7 +107,7 @@ def main():
     st.subheader("Hey there! I’m your new expense tracking sidekick. Just send me a photo or upload your receipts, and I’ll handle the data entry.")
 
     # Layout for camera input, "OR", and file uploader
-    col1, col2, col3 = st.columns([1, 1, 2])
+    col1, col2, col3 = st.columns([2, 1, 2])
 
     # Use Streamlit camera input to take a photo
     with col1:
