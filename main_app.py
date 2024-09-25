@@ -151,7 +151,17 @@ def main():
             merchant = fields[1].split(":")[1].strip() if len(fields) > 1 else ""
             amount = fields[2].split(":")[1].strip() if len(fields) > 2 else ""
             category = fields[3].split(":")[1].strip() if len(fields) > 3 else "Not available"
-            description = fields[4].split(":")[1].strip() if len(fields) > 4 else ""
+            if idx >= len(st.session_state['summary_data']):
+                description = fields[4].split(":")[1].strip() if len(fields) > 4 else ""
+                st.session_state['summary_data'].append({
+                    "Date of Purchase": date_of_purchase,
+                    "Merchant": merchant,
+                    "Amount": amount,
+                    "Category": category,
+                    "Description": description
+                })
+            else:
+                description = st.session_state['summary_data'][idx]["Description"]
 
             # If this is the first time, add the extracted data to the summary table
             if idx >= len(st.session_state['summary_data']):
@@ -185,8 +195,14 @@ def main():
                         submitted = st.form_submit_button("Update")
                     
                     if submitted:
-                        # Update the row directly at index 'idx'
-                        update_existing_row(idx, date_input, merchant_input, amount_input, category_input, description_input)
+                        # Directly update with user's inputs, no new description generation
+                        st.session_state['summary_data'][idx] = {
+                            "Date of Purchase": date_input,
+                            "Merchant": merchant_input,
+                            "Amount": amount_input,
+                            "Category": category_input,
+                            "Description": description_input  # Use exactly what the user input, including "0"
+                        }
                         with success_col:
                             st.success("Details updated!", icon="✅")
 
