@@ -50,30 +50,42 @@ def extract_raw_text_from_img_openai(image_bytes):
     return response['choices'][0]['message']['content']
 
 # Extract structured receipt data using GPT-4
+
 def extract_structured_data(content: str):
     template = """
-        You are an expert at extracting information from receipts issued in the Philippines. Please extract the following details from the receipt:
-
+        You are an expert at extracting information from receipts. Please note that the image may contain more than one receipt. 
+        If there are multiple receipts, extract and return the details for each receipt individually.
+        
+        For each receipt, extract the following details:
         - Date of Purchase
         - Merchant
         - Amount
-        - Category (choose from the following: "Food", "Transportation", "Furniture", "Clothing", "Entertainment", "Healthcare", "Other"). Choose the most appropriate category based on the receipt content and the context of Filipino transactions.
+        - Category (choose from the following: "Food", "Transportation", "Furniture", "Clothing", "Entertainment", "Healthcare", "Other")
         - Summary
         
-        If any information is not available, please return "Not available".
+        If any information is not available, return "Not available".
         
-        For the **Summary**, the format must be: "<Merchant> payment for <item/transaction made> on <date>." Ensure the summary is 10-20 words long and clearly describes the purpose of the transaction (e.g., "XYZ Restaurant payment for dinner on September 5, 2024").
+        For the **Summary**, ensure that it is in the format: "<Merchant> payment for <item/transaction made> on <date>." 
+        The summary should be 10-20 words long, clearly describing the purpose of the transaction.
 
         Here is the receipt content:
 
         {content}
 
         Return the information in this format:
+        Receipt 1:
         Date of Purchase: 
         Merchant:
         Amount:
-        Category: <choose from the provided list based on the receipt content and context>
-        Summary: <Merchant> payment for <item/transaction made> on <date>.
+        Category:
+        Summary:
+        
+        Receipt 2 (if applicable):
+        Date of Purchase: 
+        Merchant:
+        Amount:
+        Category:
+        Summary:
     """
     
     response = openai.ChatCompletion.create(
@@ -82,7 +94,7 @@ def extract_structured_data(content: str):
             "role": "user",
             "content": template.format(content=content)
         }],
-        max_tokens=500
+        max_tokens=2048
     )
     
     return response.choices[0].message['content'].strip()
