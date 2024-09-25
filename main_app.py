@@ -126,7 +126,7 @@ def convert_pdf_to_images(pdf_bytes):
 # Main function for the Streamlit app
 def main():
     st.title("💼 Expense Tracker")
-    st.subheader("Hey there! I’m your new expense tracking sidekick. Just send me a photo or upload your receipts, and I’ll handle the data entry.")
+    st.subheader("Take a photo of the receipt or upload it (Image or PDF)")
 
     # Layout for camera input, "OR", and file uploader
     col1, col2, col3 = st.columns([1, 1, 2])
